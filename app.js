@@ -16,8 +16,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api',apiRouter);
-app.listen(3000, ()=>{
-    console.log("Servidor iniciado en el puerto 3000");
-});
+
 
 module.exports = app;

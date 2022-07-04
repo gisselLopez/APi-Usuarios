@@ -16,7 +16,7 @@ describe("Testing Categoria Crud in MongoDB", () => {
       ...env,
       MONGODB_URI: "mongodb+srv://ochenta_user:4iBGz15x7vDcFyFn@cluster2022.bhiilrb.mongodb.net/?retryWrites=true&w=majority",
       MONGODB_DB: "sw202202_test",
-      MONGODB_SETUP: 1,
+      MONGODB_SETUP: 1, 
     };
     db = await Connection.getDB();
     CatDao = new CategoriaDao(db,'categories');

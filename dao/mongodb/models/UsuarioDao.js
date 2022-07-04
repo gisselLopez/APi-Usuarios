@@ -1,39 +1,63 @@
 const { db } = require('../Connection');
 const DaoObject = require('../DaoObject');
-module.exports = class UsuarioDao extends DaoObject {
+module.exports = class UsuariosDao extends DaoObject {
   constructor(db = null) {
-    console.log('UsuarioDao db: ', db);
     super(db, 'usuarios');
   }
   async setup() {
     if (process.env.MONGODB_SETUP) {
-     // TODO: Agregar Indices
+     const indexExists = await this.collection.indexExists('email_1');
+     if (!indexExists) {
+      await this.collection.createIndex({email:1}, {unique:true});
+     }
     }
   }
 
   getAll() {
     return this.find();
   }
-  getById({codigo}) {
+
+  getById({ codigo }) {
     return this.findById(codigo);
   }
-  insertOne({ email,password,nombre,avatar,estado }) {
-    return super.insertOne({email,password,nombre,avatar, estado, created: new Date().toISOString()});
+
+  getByEmail({ email }) {
+    return this.findOne({email});
   }
-  updateOne({ codigo, email,password,nombre,avatar, estado }) {
+
+  insertOne({ email, password, nombre, avatar, estado }) {
+    const newUser = {
+      email,
+      password,
+      nombre,
+      avatar,
+      estado,
+      created: new Date().toISOString(),
+    }
+    return super.insertOne(newUser);
+  }
+
+  updateOne({ codigo, password, nombre, avatar, estado }) {
     const updateCommand = {
-      '$set': {
-        email,
-        password,
+      "$set": {
         nombre,
+        password,
         avatar,
         estado,
         updated: new Date().toISOString()
       }
-    };
+    }
     return super.updateOne(codigo, updateCommand);
   }
+
   deleteOne({ codigo }) {
-    return super.removeOne(codigo);
+    const updateCommand = {
+      "$set": {
+        estado:'INA',
+        updated: new Date().toISOString()
+      }
+    }
+    return super.updateOne(codigo, updateCommand);
   }
+
 }

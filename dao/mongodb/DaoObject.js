@@ -32,6 +32,10 @@ module.exports = class DaoObject {
     }
   }
 
+  objectId( id ) {
+    return new ObjectId(id);
+  }
+
   find(query={}, projection=null, orderBy=null, limit=null, skip=null, returnCursor=false){
     const options = {
       projection,
@@ -44,9 +48,17 @@ module.exports = class DaoObject {
     else
       return this.collection.find(query, options).toArray();
   }
+
   findById(_id){
     const queryId = {_id: new ObjectId(_id)}
     return this.collection.findOne(queryId);
+  }
+
+  findOne(query = {}, projection = null ){
+    const options = {
+      projection
+    };
+    return this.collection.findOne(query, options);
   }
 
   insertOne(docToInsert={}){
@@ -55,12 +67,15 @@ module.exports = class DaoObject {
     }
     return this.collection.insertOne(docToInsert);
   }
- 
+
   updateOne(_id, queryCommand){
     return this.collection.updateOne({_id:new ObjectId(_id)}, queryCommand);
   }
   removeOne(_id){
     return this.collection.deleteOne({_id: new ObjectId(_id)});
   }
-  aggregate(){}
+  aggregate(stages){
+    return this.collection.aggregate(stages).toArray();
+  }
+
 }
