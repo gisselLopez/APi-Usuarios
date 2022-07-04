@@ -7,5 +7,11 @@ module.exports = {
     process.env.JWT_SECRET,
     {expiresIn}
   ),
-  jwtVerify: async (token)=>jwt.verify(token, process.env.JWT_SECRET)
+   jwtSingReset: async (payload) => jwt.sign(
+        payload,
+        process.env.JWT_SECRET_RESET,
+        {expiresIn: expiresInReset}
+    ),
+  jwtVerify: async (token)=>jwt.verify(token, process.env.JWT_SECRET),
+
 }
